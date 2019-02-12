@@ -44,6 +44,29 @@ public class PrintFrame extends JFrame{
 			style += "\n";
 			
 		}
+		style = style.replaceAll(";", "; ");
+		mJTextArea.setText(style);
+	}
+	public void printMap(DrawPanel mDrawPanel) {
+		ArrayList<AreaVo> areaList = mDrawPanel.areaList;
+		String style = "";
+		
+		int imageWidth = mDrawPanel.img.getWidth(null);
+		int imageHeight = mDrawPanel.img.getHeight(null);
+		float imageWidth_1 = (imageWidth/100f);
+		float imageHeight_1 = (imageHeight/100f);
+		for(int i=0;i< areaList.size();i++) {
+			
+			AreaVo vo = areaList.get(i);
+			int startX = (int)(imageWidth_1 * vo.getPersentX());
+			int endX = (int)(imageWidth_1 * (vo.getPersentX()+vo.getPersentWidth()));
+			int startY = (int)(imageWidth_1 * vo.getPersentY());
+			int endY = (int)(imageWidth_1 * (vo.getPersentY()+vo.getPersentHeight()));
+			
+			style += i + " : ";
+			style += "<area shape=\"rect\" coords=\""+startX+","+startY+","+endX+","+endY+"\" href=\"\" />";
+			style += "\n";
+		}
 		mJTextArea.setText(style);
 	}
 	public double rounds(double value,double size) {

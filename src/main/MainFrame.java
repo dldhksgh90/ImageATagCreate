@@ -92,23 +92,24 @@ public class MainFrame extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
 					try {
 						String input = JOptionPane.showInputDialog("image URL");
-						if(input.indexOf("http")==-1) {
-							while(input.charAt(0)=='/') {
-								input = input.substring(1,input.length());
+						if(input!=null) {
+							if(input.indexOf("http")==-1) {
+								while(input.charAt(0)=='/') {
+									input = input.substring(1,input.length());
+								}
+								input = "http://" + input;
 							}
-							input = "http://" + input;
+							
+							URL url;
+							url = new URL(input);
+							System.out.println(input);
+							mImagePanel.mDrawPanel.setImage(ImageIO.read(url));
+							mImagePanel.mDrawPanel.areaList.removeAll(mImagePanel.mDrawPanel.areaList);
+							
+							mImagePanel.mDrawPanel.repaint();
+							mImagePanel.mDrawPanel.updateUI();
+							mImagePanel.mDrawPanel.invalidate();
 						}
-						
-						URL url;
-						url = new URL(input);
-						System.out.println(input);
-						mImagePanel.mDrawPanel.setImage(ImageIO.read(url));
-						mImagePanel.mDrawPanel.areaList.removeAll(mImagePanel.mDrawPanel.areaList);
-						
-						mImagePanel.mDrawPanel.repaint();
-						mImagePanel.mDrawPanel.updateUI();
-						mImagePanel.mDrawPanel.invalidate();
-						
 					}catch(Exception e) {
 						e.printStackTrace();
 					}
@@ -120,7 +121,15 @@ public class MainFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 					try {
-						mPrintFrame.printStyle(mImagePanel.mDrawPanel);
+						
+						String []fruits = {"css","map"};
+						int selected = JOptionPane.showOptionDialog(null, "print", "printType",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, fruits, fruits[0]);
+						if(selected==0) {
+							mPrintFrame.printStyle(mImagePanel.mDrawPanel);
+						}else {
+							mPrintFrame.printMap(mImagePanel.mDrawPanel);
+						}
 					}catch(Exception e) {
 						e.printStackTrace();
 					}
