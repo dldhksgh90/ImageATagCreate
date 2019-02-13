@@ -195,7 +195,7 @@ public class MainFrame extends JFrame{
 	public void setComponent() {
 
 		imagePanel = imageLayout();
-		add(imagePanel,EventUtils.layout(0, 1, 1, 1, 1, 8, NON, NON, GridBagConstraints.BOTH, NON));
+		add(imagePanel,EventUtils.layout(0, 1, 1, 1, 1, 9, NON, NON, GridBagConstraints.BOTH, NON));
 		add(mAreaPrint.scroll,EventUtils.layout(0, 2, 1, 1, 1, 1, NON, NON, GridBagConstraints.BOTH, NON));
 	}
 	

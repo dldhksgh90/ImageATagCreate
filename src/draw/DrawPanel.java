@@ -66,21 +66,11 @@ public class DrawPanel extends JPanel{
 		areaList = new ArrayList<AreaVo>();
 	
 		
-		try {
-			URL url = new URL("http://img.onlinetour.co.kr/2019/event/hotel/0118_snow/event_01.jpg");
-			setImage(ImageIO.read(url));
-			repaint();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		setListener();
 		invalidate();
 		repaint();
 		updateUI();
 
-		getFont("Serif",Font.BOLD,10);
 	}
 	
 	
@@ -94,6 +84,7 @@ public class DrawPanel extends JPanel{
 	Graphics buffer = null;
 	
 	public void paint(Graphics g) {
+		
 		if(img!=null) {
 			isDraw = true;
 			setViewSize();
@@ -116,6 +107,17 @@ public class DrawPanel extends JPanel{
 			}
 			
 			isDraw = false;
+		}else {
+			
+			mImagePanel.mDrawPanel.frameHeight = mImagePanel.scrollPanel.getHeight();
+			mImagePanel.mDrawPanel.frameWidth = mImagePanel.scrollPanel.getWidth();
+			img_buffer = createImage((int)frameWidth,(int)frameHeight);
+			buffer = img_buffer.getGraphics();
+
+			buffer.setColor(new Color(50,50,50));
+			buffer.fillRect(0, 0, getWidth(),getHeight());
+			g.drawImage(img_buffer, 0 ,0,this);
+			
 		}
 	}
 	public void createView() {
