@@ -65,12 +65,22 @@ public class DrawPanel extends JPanel{
 		mDrawTouchListener = new DrawTouchListener(this);
 		areaList = new ArrayList<AreaVo>();
 	
+		
+		try {
+			URL url = new URL("http://img.onlinetour.co.kr/2019/event/hotel/0118_snow/event_01.jpg");
+			setImage(ImageIO.read(url));
+			repaint();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		setListener();
 		invalidate();
 		repaint();
 		updateUI();
 
-		
+		getFont("Serif",Font.BOLD,10);
 	}
 	
 	
@@ -179,7 +189,7 @@ public class DrawPanel extends JPanel{
 			setPreferredSize(new Dimension(drawX > 0 ? 0 : (int)width,drawY > 0 ? 0 : (int)height));
 		}
 		ScrollDate date = mDrawTouchListener.mEventDisplayMove.getPoint(mImagePanel.drawPanelScroll);
-		if(zoomScrollDate!=null && zoomScrollDate.orgWidth != date.orgWidth) {
+		if(zoomScrollDate!=null && (zoomScrollDate.orgWidth != date.orgWidth || zoomScrollDate.orgHeight != date.orgHeight)) {
 			double imageOrgWidth = ((img.getWidth(null) / 100d) * (frameWidth/imageWidth * 100d));
 			double imageOrgHeight = ((img.getHeight(null) / 100d) * (frameHeight/imageHeight * 100d));
 			
@@ -201,7 +211,7 @@ public class DrawPanel extends JPanel{
 			zoomScrollDate = null;
 		}else {
 			if(zoomScrollDate!=null && !(zoomScrollDate.orgWidth != date.orgWidth)) {
-				if(drawY>0 || drawX>0) {
+				if(drawY>0 && drawX>0) {
 					zoomScrollDate = null;
 				}
 			}
@@ -235,7 +245,7 @@ public class DrawPanel extends JPanel{
 			if(testHeight < height && up != Boolean.FALSE) {
 				size++;
 				up = Boolean.TRUE;
-			}else if(testHeight < height && up != Boolean.TRUE) {
+			}else if(testHeight > height && up != Boolean.TRUE) {
 				size--;
 				up = Boolean.FALSE;
 			}else {
