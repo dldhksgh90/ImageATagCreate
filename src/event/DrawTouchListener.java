@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Arrays;
 
 import javax.swing.JScrollPane;
 
@@ -138,14 +139,14 @@ public class DrawTouchListener {
 					mDrawPanel.zoom = 0.1f;
 				}
 				
-				if(mDrawPanel.drawY>0||mDrawPanel.drawX>0) {
+				//if(mDrawPanel.drawY>0&&mDrawPanel.drawX>0) {
 					
-				}else {
+				//}else {
 					Point p = mDrawPanel.mImagePanel.drawPanelScroll.getViewport().getViewPosition();
 					JScrollPane drawPanelScroll = mDrawPanel.mImagePanel.drawPanelScroll;
 					mDrawPanel.zoomPosition = Utility.getZoomImagePosition(drawPanelScroll,mDrawPanel,e.getX(),e.getY());
 					mDrawPanel.zoomScrollDate = mEventDisplayMove.getPoint(drawPanelScroll);
-				}
+				//}
 				if(drawThread!=null) {
 					drawThread.stop();
 				}
@@ -160,11 +161,14 @@ public class DrawTouchListener {
 							e.printStackTrace();
 						}
 						mDrawPanel.repaint();
+						mDrawPanel.invalidate();
+						mDrawPanel.updateUI();
 						drawThread = null;
 					}
 					
 				});
 				drawThread.start();
+				mDrawPanel.repaint();
 			}
 		}
 		

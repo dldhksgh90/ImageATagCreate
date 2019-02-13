@@ -2,27 +2,19 @@ package main;
 
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import Date.AreaVo;
 import draw.DrawPanel;
 
-public class PrintFrame extends JFrame{
-	
+public class AreaPrint {
 	public JScrollPane scroll;
 	JTextArea mJTextArea;
-	
-	public PrintFrame() {
-		setBounds(100,200,40,20);
-		setUndecorated(true);
-		setVisible(true);
+	public AreaPrint() {
 		mJTextArea = new JTextArea();
 		scroll = new JScrollPane(mJTextArea);
-		add(scroll);
 	}
-	
 	public void printStyle(DrawPanel mDrawPanel) {
 		ArrayList<AreaVo> areaList = mDrawPanel.areaList;
 		String style = "";

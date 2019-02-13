@@ -21,6 +21,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import Utility.EventUtils;
 import draw.ImagePanel;
@@ -30,7 +31,7 @@ public class MainFrame extends JFrame{
 	public final static int width = 500;
 	public final static int height = 300;
 	
-	PrintFrame mPrintFrame;
+	//PrintFrame mPrintFrame;
 	ImagePanel mImagePanel;
 	JPanel imagePanel;
 	JPanel toolPanel;
@@ -40,12 +41,15 @@ public class MainFrame extends JFrame{
 	JMenuItem openURL;
 	JMenuItem printArea;
 	
+	AreaPrint mAreaPrint;
+	
 	public MainFrame() {
+		mAreaPrint = new AreaPrint();
 		mImagePanel = new ImagePanel(this);
-		mPrintFrame = new PrintFrame();
+	//	mPrintFrame = new PrintFrame();
 		setMenu();
 		setFrame();
-		setPrintFrame();
+		//setPrintFrame();
 		
 		setSize(width,height);
 	}
@@ -121,14 +125,15 @@ public class MainFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 					try {
-						
-						String []fruits = {"css","map"};
-						int selected = JOptionPane.showOptionDialog(null, "print", "printType",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, fruits, fruits[0]);
-						if(selected==0) {
-							mPrintFrame.printStyle(mImagePanel.mDrawPanel);
-						}else {
-							mPrintFrame.printMap(mImagePanel.mDrawPanel);
+						if(mImagePanel.mDrawPanel.img!=null) {
+							String []fruits = {"css","map"};
+							int selected = JOptionPane.showOptionDialog(null, "print", "printType",
+							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, fruits, fruits[0]);
+							if(selected==0) {
+								mAreaPrint.printStyle(mImagePanel.mDrawPanel);
+							}else {
+								mAreaPrint.printMap(mImagePanel.mDrawPanel);
+							}
 						}
 					}catch(Exception e) {
 						e.printStackTrace();
@@ -162,7 +167,7 @@ public class MainFrame extends JFrame{
 
 			@Override
 			public void componentMoved(ComponentEvent arg0) {
-				setPrintFrame();
+			//	setPrintFrame();
 				mImagePanel.mDrawPanel.repaint();
 				mImagePanel.mDrawPanel.updateUI();
 				mImagePanel.mDrawPanel.invalidate();
@@ -170,7 +175,7 @@ public class MainFrame extends JFrame{
 
 			@Override
 			public void componentResized(ComponentEvent arg0) {
-				setPrintFrame();
+			//	setPrintFrame();
 				mImagePanel.mDrawPanel.repaint();
 				mImagePanel.mDrawPanel.updateUI();
 				mImagePanel.mDrawPanel.invalidate();
@@ -184,12 +189,14 @@ public class MainFrame extends JFrame{
 			
 		});
 	}
-	public void setPrintFrame() {
-		mPrintFrame.setBounds(getLocation().x,getLocation().y+getHeight(),getWidth(),60);
-	}
+//	public void setPrintFrame() {
+//		mPrintFrame.setBounds(getLocation().x,getLocation().y+getHeight(),getWidth(),60);
+//	}
 	public void setComponent() {
+
 		imagePanel = imageLayout();
-		add(imagePanel,EventUtils.layout(0, 1, 1, 1, 1, 3, NON, NON, GridBagConstraints.BOTH, NON));
+		add(imagePanel,EventUtils.layout(0, 1, 1, 1, 1, 8, NON, NON, GridBagConstraints.BOTH, NON));
+		add(mAreaPrint.scroll,EventUtils.layout(0, 2, 1, 1, 1, 1, NON, NON, GridBagConstraints.BOTH, NON));
 	}
 	
 	public JPanel imageLayout() {

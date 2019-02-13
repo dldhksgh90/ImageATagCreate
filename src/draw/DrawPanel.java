@@ -89,6 +89,7 @@ public class DrawPanel extends JPanel{
 			setViewSize();
 			
 			boolean tempIsDraw = false;
+			
 			if(zoomScrollDate==null) {
 				tempIsDraw = true;
 				createView();
@@ -160,7 +161,6 @@ public class DrawPanel extends JPanel{
 			double imgY_1 = (img.getHeight(null)-imageOrgHeight)/100d;
 			imageCropX = (int)(imgX_1 * scrollPersentX);
 			imageCropY = (int)(imgY_1 * scrollPersentY);
-			System.out.println(imageCropX);
 			BufferedImage crop = ((BufferedImage)img).getSubimage(imageCropX, imageCropY, (int)imageOrgWidth,(int)imageOrgHeight);
 			buffer.drawImage(crop, 0, 0, (int)frameWidth,(int)frameHeight,null);
 		}
@@ -199,6 +199,12 @@ public class DrawPanel extends JPanel{
 			mImagePanel.drawPanelScroll.getHorizontalScrollBar().setValue(tempMoveScrollX - tempMoveScrollMouseX);
 			mImagePanel.drawPanelScroll.getVerticalScrollBar().setValue(tempMoveScrollY - tempMoveScrollMouseY);
 			zoomScrollDate = null;
+		}else {
+			if(zoomScrollDate!=null && !(zoomScrollDate.orgWidth != date.orgWidth)) {
+				if(drawY>0 || drawX>0) {
+					zoomScrollDate = null;
+				}
+			}
 		}
 	}
 	public void drawDragRect() {
