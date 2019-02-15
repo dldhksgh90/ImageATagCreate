@@ -1,17 +1,16 @@
 package draw;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import Date.AreaVo;
@@ -42,7 +41,11 @@ public class DrawPanel extends JPanel{
 	public int drawX;
 	public int drawY;
 	
+	double imageOrgWidth;
+	double imageOrgHeight;
+	
 	public float zoom = 1.0f;
+	public float autoReSize = 15.0f;
 	public double zoomPosition[];
 	public ScrollDate zoomScrollDate;
 	
@@ -52,6 +55,10 @@ public class DrawPanel extends JPanel{
 	public int imageCropY = 0;
 	
 	public boolean isDraw = false;
+	
+	double PixelX[][];
+	double PixelY[][];
+	double PixelZoom = 0.0d;
 	
 	public void setImage(Image image) {
 		this.img = image;
@@ -95,6 +102,7 @@ public class DrawPanel extends JPanel{
 				tempIsDraw = true;
 				createView();
 				drawBackground();
+				drawBackLine();
 				drawAreaRect();
 				drawDragRect();
 			}
@@ -152,6 +160,38 @@ public class DrawPanel extends JPanel{
 		}
 		
 	}
+	public boolean isPixel() {
+		return ((imageOrgWidth/img.getWidth(null)*100)<autoReSize);
+	}
+	public void drawBackLine() {
+		if(isPixel()) {
+			
+			ScrollDate date = mDrawTouchListener.mEventDisplayMove.getPoint(mImagePanel.drawPanelScroll);
+			Point p = mImagePanel.drawPanelScroll.getViewport().getViewPosition();
+			double PixelWidth = frameWidth / ((int)imageOrgWidth);
+			double PixelHeight = frameHeight / ((int)imageOrgHeight);
+			if(PixelZoom != zoom) {
+				PixelX = new double[(int)imageOrgWidth][(int)imageOrgHeight];
+				PixelY = new double[(int)imageOrgWidth][(int)imageOrgHeight];
+				PixelZoom = zoom;
+				for(int i=0;i<PixelX.length;i++) {
+					for(int j=0;j<PixelX[i].length;j++) {
+						PixelX[i][j] = (((PixelWidth* i)+(imageCropX * zoom)) / imageWidth) * 100;
+						PixelY[i][j] = (((PixelHeight* i)+(imageCropY * zoom)) / imageHeight) * 100;
+					}
+				}
+			}
+			((Graphics2D)buffer).setStroke(new BasicStroke(1));
+			buffer.setColor(new Color(130,130,130,200));
+			
+			for(double i = 0;i<=frameWidth;i += PixelWidth) {
+				buffer.drawLine((int)i,(int)0,(int)i,(int)frameHeight);
+			}
+			for(double i = 0;i<=frameHeight;i += PixelHeight) {
+				buffer.drawLine((int)0,(int)i,(int)frameWidth,(int)i);
+			}
+		}
+	}
 	public void drawBackground() {
 		buffer.setColor(new Color(50,50,50));
 		buffer.fillRect(0, 0, getWidth(),getHeight());
@@ -166,8 +206,8 @@ public class DrawPanel extends JPanel{
 			double scrollPersentX = (date.x/date.orgWidth*100d);
 			double scrollPersentY = (date.y / date.orgHeight*100d);
 			
-			double imageOrgWidth = ((img.getWidth(null) / 100d) * (frameWidth/imageWidth * 100d));
-			double imageOrgHeight = ((img.getHeight(null) / 100d) * (frameHeight/imageHeight * 100d));
+			imageOrgWidth = ((img.getWidth(null) / 100d) * (frameWidth/imageWidth * 100d));
+			imageOrgHeight = ((img.getHeight(null) / 100d) * (frameHeight/imageHeight * 100d));
 			
 			double imgX_1 = (img.getWidth(null)-imageOrgWidth)/100d;
 			double imgY_1 = (img.getHeight(null)-imageOrgHeight)/100d;
