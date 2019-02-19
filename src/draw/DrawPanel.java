@@ -79,14 +79,6 @@ public class DrawPanel extends JPanel{
 		this.mMainFrame = mMainFrame;
 		mDrawTouchListener = new DrawTouchListener(this);
 		areaList = new ArrayList<AreaVo>();
-		try {
-			URL url = new URL("http://img.onlinetour.co.kr/2019/event/hotel/0118_snow/event_01.jpg");
-			setImage(ImageIO.read(url));
-			repaint();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		setListener();
 		invalidate();
