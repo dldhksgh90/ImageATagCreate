@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JScrollPane;
 
+import Date.AreaVo;
 import draw.DrawPanel;
 
 public class Utility {
@@ -30,5 +31,16 @@ public class Utility {
 				,y / mDrawPane.imageHeight * 100
 				,(x-p.x)/mDrawPane.frameWidth * 100
 				,(y-p.y)/mDrawPane.frameHeight * 100};
+	}
+	public static double[] getPixel(AreaVo vo,DrawPanel mDrawPane) {
+		double PixelWidth = mDrawPane.frameWidth / ((int)mDrawPane.imageOrgWidth);
+		double PixelHeight = mDrawPane.frameHeight / ((int)mDrawPane.imageOrgHeight);
+			return new double[] {
+					(int)(((int)vo.getX() - (int)mDrawPane.imageCropX) * PixelWidth),
+					(int)(((int)vo.getY() - (int)mDrawPane.imageCropY) * PixelHeight),
+					(int)(vo.getWidth() * PixelWidth),
+					(int)(vo.getHeight() * PixelHeight)
+			};
+		
 	}
 }

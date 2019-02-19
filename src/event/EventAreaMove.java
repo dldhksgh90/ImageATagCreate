@@ -35,8 +35,8 @@ public class EventAreaMove {
 				startX = mDrawPanel.drawX > 0 ? startX - mDrawPanel.drawX : startX;
 				startY = mDrawPanel.drawY > 0 ? startY - mDrawPanel.drawY : startY;
 				
-				vo.setPersentX(startX/imageWidth*100f);
-				vo.setPersentY(startY/imageHeight*100f);
+				vo.setX(startX/imageWidth*100f * (mDrawPanel.orgImageWidth/100f));
+				vo.setY(startY/imageHeight*100f * (mDrawPanel.orgImageHeight/100f));
 			}else {
 				AreaVo vo = mDrawPanel.areaList.get(saveArea);
 				float imageWidthPersent_1 = mDrawPanel.imageWidth / 100f;
@@ -47,10 +47,10 @@ public class EventAreaMove {
 				int startX = movePosition[0] - downAreaX;
 				int startY = movePosition[1] - downAreaY;
 				
-				startX = mDrawPanel.drawX > 0 ? startX - mDrawPanel.drawX : startX;
-				startY = mDrawPanel.drawY > 0 ? startY - mDrawPanel.drawY : startY;
-				vo.setPersentX(startX/imageWidth*100f);
-				vo.setPersentY(startY/imageHeight*100f);
+				vo.setX(startX/imageWidth*100f * (mDrawPanel.orgImageWidth/100f));
+				vo.setY(startY/imageHeight*100f * (mDrawPanel.orgImageHeight/100f));
+				
+				
 				
 				
 			}

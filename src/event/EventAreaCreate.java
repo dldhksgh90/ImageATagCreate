@@ -39,9 +39,12 @@ public class EventAreaCreate {
 			moveY = e.getY();
 		}
 	}
+	
 	public void createAreaUp(MouseEvent e) {
 		JScrollPane drawPanelScroll = mDrawPanel.mImagePanel.drawPanelScroll;
 		Point p = mDrawPanel.mImagePanel.drawPanelScroll.getViewport().getViewPosition();
+		float widthPersent_1 = (mDrawPanel.orgImageWidth/100f);
+		float heightPersent_1 = (mDrawPanel.orgImageHeight/100f);
 		
 		if(mDrawPanel.drawY > 0 || mDrawPanel.drawX > 0) {
 			float imageWidth = mDrawPanel.imageWidth;
@@ -58,68 +61,45 @@ public class EventAreaCreate {
 			
 			if(width/imageWidth*100f >= 1 && height/imageHeight * 100f >= 1) {
 				AreaVo vo = new AreaVo();
-				vo.setX(startX);
-				vo.setY(startY);
-				vo.setWidth(width);
-				vo.setHeight(height);
-				vo.setImageWidth((int)imageWidth);
-				vo.setImageHeight((int)imageHeight);
+				vo.setX((startX/imageWidth*100f) * widthPersent_1);
+				vo.setY((startY/imageHeight*100f) * heightPersent_1);
+				vo.setWidth((width/imageWidth*100f) * widthPersent_1);
+				vo.setHeight((height/imageHeight*100f) * heightPersent_1);
+				vo.setImageWidth(mDrawPanel.orgImageWidth);
+				vo.setImageHeight(mDrawPanel.orgImageHeight);
 				
-				vo.setPersentX(startX/imageWidth*100f);
-				vo.setPersentY(startY/imageHeight*100f);
-				vo.setPersentWidth(width/imageWidth*100f);
-				vo.setPersentHeight(height/imageHeight*100f);
 				mDrawPanel.areaList.add(vo);
 			}
 		}else {
-			int areaCreateDownPosition[] = Utility.getZoomPosition(drawPanelScroll,mDrawPanel,AreaCreateDownX,AreaCreateDownY);
-			AreaCreateDownX = areaCreateDownPosition[0];
-			AreaCreateDownY = areaCreateDownPosition[1];
+
+			double tempDownX = (AreaCreateDownX - p.x) / mDrawPanel.zoom;
+			double tempDownY = (AreaCreateDownY - p.y) / mDrawPanel.zoom; 
+			double tempMoveX = (moveX - p.x) / mDrawPanel.zoom;
+			double tempMoveY = (moveY - p.y) / mDrawPanel.zoom;
 			
-			int movePosition[] = Utility.getZoomPosition(drawPanelScroll, mDrawPanel, moveX, moveY);
-			moveX = movePosition[0];
-			moveY = movePosition[1];
+			double width = Math.abs(tempDownX - tempMoveX);
+			double height = Math.abs(tempDownY - tempMoveY);
 			
-			double imageWidth = mDrawPanel.imageWidth;
-			double imageHeight = mDrawPanel.imageHeight;
+			double startX = tempDownX < tempMoveX ? tempDownX : tempMoveX;
+			double startY = tempDownY < tempMoveY ? tempDownY : tempMoveY;
+
 			
-			double width = Math.abs(AreaCreateDownX - moveX);
-			double height = Math.abs(AreaCreateDownY - moveY);
 			
-			double startX = AreaCreateDownX < moveX ? AreaCreateDownX : moveX;
-			double startY = AreaCreateDownY < moveY ? AreaCreateDownY : moveY;
-			
-			startX = mDrawPanel.drawX > 0 ? startX - mDrawPanel.drawX : startX;
-			startY = mDrawPanel.drawY > 0 ? startY - mDrawPanel.drawY : startY;
-			
-			if(width/imageWidth * 100d >= 1 && height/imageHeight*100d >= 1) {
 				AreaVo vo = new AreaVo();
-				vo.setX((int)startX);
-				vo.setY((int)startY);
+				vo.setX((int)(mDrawPanel.imageCropX + (startX)));
+				vo.setY((int)(mDrawPanel.imageCropY + (startY)));
 				vo.setWidth((int)width);
 				vo.setHeight((int)height);
-				vo.setImageWidth((int)imageWidth);
-				vo.setImageHeight((int)imageHeight);
+				vo.setImageWidth(mDrawPanel.orgImageWidth);
+				vo.setImageHeight(mDrawPanel.orgImageHeight);
 				
-				vo.setPersentX(startX/imageWidth*100d);
-				vo.setPersentY(startY/imageHeight*100d);
-				vo.setPersentWidth(width/imageWidth*100d);
-				vo.setPersentHeight(height/imageHeight*100d);
 				mDrawPanel.areaList.add(vo);
-			}
 		}
 	}
-	
-	
-	
 	
 	public void move(MouseEvent e) {
 		moveX = e.getX();
 		moveY = e.getY();
 	}
-	
-	
-	
-	
 	
 }

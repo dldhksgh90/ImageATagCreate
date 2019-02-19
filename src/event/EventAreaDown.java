@@ -3,6 +3,7 @@ package event;
 import java.awt.Point;
 
 import Date.AreaVo;
+import Date.AreaVo.AreaPoint;
 import draw.DrawPanel;
 
 public class EventAreaDown {
@@ -20,16 +21,21 @@ public class EventAreaDown {
 		int touchBoxX = 0;
 		int touchBoxY = 0;
 		
+		double PixelWidth = mDrawPanel.frameWidth / ((int)mDrawPanel.imageOrgWidth);
+		double PixelHeight = mDrawPanel.frameHeight / ((int)mDrawPanel.imageOrgHeight);
+		
 		Point p = mDrawPanel.mImagePanel.drawPanelScroll.getViewport().getViewPosition();
 		if(mDrawPanel.drawX > 0 || mDrawPanel.drawY > 0 ) {
+			
 			double imageWidthPersent_1 = mDrawPanel.imageWidth / 100d;
 			double imageHeightPersent_1 = mDrawPanel.imageHeight / 100d;
 			for(int i=0;i<mDrawPanel.areaList.size();i++) {
 				AreaVo vo = mDrawPanel.areaList.get(i);
-				int startX = mDrawPanel.drawX + (int)(imageWidthPersent_1 * vo.getPersentX());
-				int startY = mDrawPanel.drawY + (int)(imageHeightPersent_1 * vo.getPersentY());
-				int width = (int)(imageWidthPersent_1 * vo.getPersentWidth());
-				int height = (int)(imageHeightPersent_1 * vo.getPersentHeight());
+				AreaPoint mAreaPoint = vo.getPoint();
+				int startX = mDrawPanel.drawX + ((int)(imageWidthPersent_1 * mAreaPoint.persentX));
+				int startY = mDrawPanel.drawY + ((int)(imageHeightPersent_1 * mAreaPoint.persentY));
+				int width = (int)(imageWidthPersent_1 * mAreaPoint.persentWidth);
+				int height = (int)(imageHeightPersent_1 * mAreaPoint.persentHeight);
 				
 				if(startX < x && startX + width> x) {
 					if(startY < y && startY + height > y) {
@@ -58,10 +64,11 @@ public class EventAreaDown {
 			y = y-p.y;
 			for(int i=0;i<mDrawPanel.areaList.size();i++) {
 				AreaVo vo = mDrawPanel.areaList.get(i);
-				int startX = ((int)(imageWidthPersent_1 * vo.getPersentX())) - (int)(mDrawPanel.imageCropX * mDrawPanel.zoom);
-				int startY = ((int)(imageHeightPersent_1 * vo.getPersentY())) - (int)(mDrawPanel.imageCropY * mDrawPanel.zoom);
-				int width = (int)(imageWidthPersent_1 * vo.getPersentWidth());
-				int height = (int)(imageHeightPersent_1 * vo.getPersentHeight());
+				int startX = (int)(((int)vo.getX() - (int)mDrawPanel.imageCropX) * PixelWidth);
+				int startY = (int)(((int)vo.getY() - (int)mDrawPanel.imageCropY) * PixelHeight);
+				int width = (int)(vo.getWidth() * PixelWidth);
+				int height = (int)(vo.getHeight() * PixelHeight);
+				
 				
 				if(startX < x && startX + width > x) {
 					if(startY < y && startY + height > y) {

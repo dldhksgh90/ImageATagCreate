@@ -1,104 +1,80 @@
 package Date;
 
 public class AreaVo {
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	private double persentX;
+	private float x;
+	private float y;
+	private float width;
+	private float height;
+/*	private double persentX;
 	private double persentY;
 	private double persentWidth;
-	private double persentHeight;
+	private double persentHeight;*/
 	private int num;
-	private int imageWidth;
-	private int imageHeight;
-
-	public int getX() {
+	private float imageWidth;
+	private float imageHeight;
+	private AreaPoint mAreaPoint;
+	
+	public AreaVo() {
+		mAreaPoint= new AreaPoint();
+	}
+	public AreaPoint getPoint() {
+		mAreaPoint.persentX = x / imageWidth * 100f;
+		mAreaPoint.persentY = y / imageHeight * 100f;
+		mAreaPoint.persentWidth = width / imageWidth * 100f;
+		mAreaPoint.persentHeight = height / imageHeight * 100f;
+		return mAreaPoint;
+	}
+	
+	public float getX() {
 		return x;
 	}
-
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
-
-	public int getY() {
+	public float getY() {
 		return y;
 	}
-
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
-
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
-
-	public void setWidth(int width) {
+	public void setWidth(float width) {
 		this.width = width;
 	}
-
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
-
-	public void setHeight(int height) {
+	public void setHeight(float height) {
 		this.height = height;
 	}
-
-	public double getPersentX() {
-		return persentX;
-	}
-
-	public void setPersentX(double persentX) {
-		this.persentX = persentX;
-	}
-
-	public double getPersentY() {
-		return persentY;
-	}
-
-	public void setPersentY(double persentY) {
-		this.persentY = persentY;
-	}
-
-	public double getPersentWidth() {
-		return persentWidth;
-	}
-
-	public void setPersentWidth(double persentWidth) {
-		this.persentWidth = persentWidth;
-	}
-
-	public double getPersentHeight() {
-		return persentHeight;
-	}
-
-	public void setPersentHeight(double persentHeight) {
-		this.persentHeight = persentHeight;
-	}
-
 	public int getNum() {
 		return num;
 	}
-
 	public void setNum(int num) {
 		this.num = num;
 	}
-
-	public int getImageWidth() {
+	public float getImageWidth() {
 		return imageWidth;
 	}
-
-	public void setImageWidth(int imageWidth) {
+	public void setImageWidth(float imageWidth) {
 		this.imageWidth = imageWidth;
 	}
-
-	public int getImageHeight() {
+	public float getImageHeight() {
 		return imageHeight;
 	}
-
-	public void setImageHeight(int imageHeight) {
+	public void setImageHeight(float imageHeight) {
 		this.imageHeight = imageHeight;
+	}
+	
+	
+
+	public class AreaPoint{
+		public double persentX;
+		public double persentY;
+		public double persentWidth;
+		public double persentHeight;
 	}
 
 }

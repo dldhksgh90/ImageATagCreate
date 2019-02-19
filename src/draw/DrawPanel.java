@@ -9,11 +9,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import Date.AreaVo;
+import Date.AreaVo.AreaPoint;
 import Date.ScrollDate;
 import event.DrawTouchListener;
 import main.MainFrame;
@@ -37,12 +40,14 @@ public class DrawPanel extends JPanel{
 	
 	public float imageWidth;
 	public float imageHeight;
+	public float orgImageWidth;
+	public float orgImageHeight;
 	
 	public int drawX;
 	public int drawY;
 	
-	double imageOrgWidth;
-	double imageOrgHeight;
+	public double imageOrgWidth;
+	public double imageOrgHeight;
 	
 	public float zoom = 1.0f;
 	public float autoReSize = 15.0f;
@@ -62,8 +67,11 @@ public class DrawPanel extends JPanel{
 	
 	public void setImage(Image image) {
 		this.img = image;
-		imageWidth = img.getWidth(null);
-		imageHeight = img.getHeight(null);	
+		imageWidth = img.getWidth(null) * zoom;
+		imageHeight = img.getHeight(null) * zoom;
+		orgImageWidth = img.getWidth(null);
+		orgImageHeight = img.getHeight(null);	
+		
 	}
 	
 	public DrawPanel(ImagePanel mImagePanel,MainFrame mMainFrame) {
@@ -71,7 +79,14 @@ public class DrawPanel extends JPanel{
 		this.mMainFrame = mMainFrame;
 		mDrawTouchListener = new DrawTouchListener(this);
 		areaList = new ArrayList<AreaVo>();
-	
+		try {
+			URL url = new URL("http://img.onlinetour.co.kr/2019/event/hotel/0118_snow/event_01.jpg");
+			setImage(ImageIO.read(url));
+			repaint();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		setListener();
 		invalidate();
@@ -206,8 +221,8 @@ public class DrawPanel extends JPanel{
 			double scrollPersentX = (date.x/date.orgWidth*100d);
 			double scrollPersentY = (date.y / date.orgHeight*100d);
 			
-			imageOrgWidth = ((img.getWidth(null) / 100d) * (frameWidth/imageWidth * 100d));
-			imageOrgHeight = ((img.getHeight(null) / 100d) * (frameHeight/imageHeight * 100d));
+			imageOrgWidth = (int)(((img.getWidth(null) / 100d) * (frameWidth/imageWidth * 100d))+0.5f);
+			imageOrgHeight = (int)(((img.getHeight(null) / 100d) * (frameHeight/imageHeight * 100d))+0.5f);
 			
 			double imgX_1 = (img.getWidth(null)-imageOrgWidth)/100d;
 			double imgY_1 = (img.getHeight(null)-imageOrgHeight)/100d;
@@ -309,40 +324,47 @@ public class DrawPanel extends JPanel{
 					buffer.setColor(new Color(30,30,255,80));
 				}
 				
-				int x = drawX + ((int)(imageWidthPersent_1 * vo.getPersentX()) - (p.x));
-				int y = drawY + ((int)(imageHeightPersent_1 * vo.getPersentY()) - (p.y));
-				int width = (int)(imageWidthPersent_1 * vo.getPersentWidth());
-				int height = (int)(imageHeightPersent_1 * vo.getPersentHeight());
+				AreaPoint mAreaPoint = vo.getPoint();
+				int x = drawX + ((int)(imageWidthPersent_1 * mAreaPoint.persentX) - (p.x));
+				int y = drawY + ((int)(imageHeightPersent_1 * mAreaPoint.persentY) - (p.y));
+				int width = (int)(imageWidthPersent_1 * mAreaPoint.persentWidth);
+				int height = (int)(imageHeightPersent_1 * mAreaPoint.persentHeight);
 				buffer.fillRect(x, y, width, height);
 				
 				int fontHeight = height/2;
 				buffer.setColor(new Color(255,255,255,255));
 				buffer.setFont(getFont("Serif",Font.BOLD,fontHeight));
 				buffer.drawString(""+i, x, y+(fontHeight/2));
-				
 				buffer.setColor(new Color(0,0,255,150));
 			}
 		}else {
-			double imageWidth = img.getWidth(null);
-			double imageHeight = img.getHeight(null);
+			
 			double imageWidth_P1 = imageWidth/100d;
 			double imageHeight_P1 = imageHeight/100d;
 			
 			double imageWidthPersent_1 = this.imageWidth / 100d;
 			double imageHeightPersent_1 = this.imageHeight / 100d;
 			
+			
+			double PixelWidth = frameWidth / ((int)imageOrgWidth);
+			double PixelHeight = frameHeight / ((int)imageOrgHeight);
+			
 			for(int i=0;i<areaList.size();i++) {
 				AreaVo vo = areaList.get(i);
+				AreaPoint mAreaPoint = vo.getPoint();
 				if(selectArea==i) {
 					buffer.setColor(new Color(255,0,0,100));
 				}else {
 					buffer.setColor(new Color(30,30,255,80));
 				}
-				int x = drawX + (int)(imageWidthPersent_1 * vo.getPersentX()) - (int)(imageCropX * zoom);
-				int y = drawY + (int)(imageHeightPersent_1 * vo.getPersentY()) - (int)(imageCropY * zoom);
 				
-				int width = (int)(imageWidthPersent_1 * vo.getPersentWidth());
-				int height = (int)(imageHeightPersent_1 * vo.getPersentHeight());
+				double areaPosition[] = Utility.Utility.getPixel(vo, this);
+				int x = (int)areaPosition[0];
+				int y = (int)areaPosition[1];
+				
+				
+				int width = (int)areaPosition[2];
+				int height = (int)areaPosition[3];
 				buffer.fillRect(x, y, width, height);
 				int fontHeight = height/2;
 				buffer.setColor(new Color(255,255,255,255));
@@ -350,6 +372,22 @@ public class DrawPanel extends JPanel{
 				buffer.drawString(""+i, x, y+(fontHeight/2));
 				buffer.setColor(new Color(0,0,255,150));
 			
+			}
+		}
+	}
+	public void selectPixel(double persentX , double persentY) {
+		double saveSqrt = 99999;
+		int index_1 = -1;
+		int index_2 = -1;
+		for(int i=0;i<PixelX.length;i++) {
+			for(int j=0;j<PixelX[i].length;j++) {
+				double Sqrt = Math.sqrt(Math.pow(Math.abs(persentX - PixelX[i][j]),2) 
+						+ Math.pow(Math.abs(persentY - PixelY[i][j]),2));
+				if(saveSqrt > Sqrt) {
+					saveSqrt = Sqrt;
+					index_1 = i;
+					index_2 = j;
+				}
 			}
 		}
 	}

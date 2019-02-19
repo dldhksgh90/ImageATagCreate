@@ -63,6 +63,17 @@ public class DrawTouchListener {
 			if(mDrawPanel.img == null) {
 				return;
 			}
+			
+			Point p = mDrawPanel.mImagePanel.drawPanelScroll.getViewport().getViewPosition();
+		/*	System.out.println("===============================================");
+			System.out.println(mDrawPanel.frameWidth+" : " + mDrawPanel.frameHeight);
+			System.out.println(mDrawPanel.imageWidth+" : " + mDrawPanel.imageHeight);
+			System.out.println(mDrawPanel.imageOrgWidth+" : " + mDrawPanel.imageOrgHeight);
+			System.out.println(e.getX() + " :  " + e.getY());
+			System.out.println((e.getX() - p.x) + " :  " + (e.getY() - p.y));*/
+			
+			
+			
 			mDrawPanel.repaint();
 		}
 		
@@ -108,7 +119,9 @@ public class DrawTouchListener {
 			if(mDrawPanel.img==null) {
 				return;
 			}
-			
+			if(isAreaReSize) {
+				mEventAreaReSize.mouseReleased();
+			}
 			if(isCreatePressed) {
 				mAreaCreate.createAreaUp(e);
 			}

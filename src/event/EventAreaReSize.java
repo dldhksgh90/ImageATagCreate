@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JScrollPane;
 
 import Date.AreaVo;
+import Date.AreaVo.AreaPoint;
 import Utility.Utility;
 import draw.DrawPanel;
 
@@ -44,19 +45,16 @@ public class EventAreaReSize {
 		int saveArea = mDrawPanel.selectArea;
 		if (saveArea >= 0) {
 			AreaVo vo = mDrawPanel.areaList.get(saveArea);
-			downPersentWidth = vo.getPersentWidth();
-			downPersentHeight = vo.getPersentHeight();
-			downFullX = vo.getPersentWidth() + vo.getPersentX();
-			downFullY = vo.getPersentHeight() + vo.getPersentY();
+			AreaPoint mAreaPoint = vo.getPoint();
+			downPersentWidth = mAreaPoint.persentWidth;
+			downPersentHeight = mAreaPoint.persentHeight;
+			downFullX = mAreaPoint.persentWidth + mAreaPoint.persentX;
+			downFullY = mAreaPoint.persentHeight + mAreaPoint.persentY;
 		}
 		
 		directionX = view[5];
 		directionY = view[6];
 		downView = view;
-		System.out.println("=============================");
-		System.out.println(downPersentWidth+" : " + downPersentHeight);
-		System.out.println(downPersentWidth+" : " + downPersentHeight);
-		System.out.println(downPersentWidth+" : " + downPersentHeight);
 		
 	}
 	public void areaReSize(MouseEvent e) {
@@ -90,17 +88,31 @@ public class EventAreaReSize {
 			}else {
 				reHeight = downPersentHeight + (downPersentY - areaMoveHeight);
 			}
-			reWidth = reWidth < 1 ? 1 : reWidth;
-			reHeight = reHeight < 1 ? 1 : reHeight;
-			
-			vo.setPersentWidth(reWidth);
-			vo.setPersentHeight(reHeight);
-			
+			reWidth = reWidth < 0.2 ? 0.2 : reWidth;
+			reHeight = reHeight < 0.2 ? 0.2 : reHeight;
+			AreaPoint mAreaPoint = vo.getPoint();
+
+			vo.setWidth((int) (reWidth * (mDrawPanel.orgImageWidth/100f)));
+			vo.setHeight((int) (reHeight * (mDrawPanel.orgImageHeight/100f)));
 			if(directionX != 0 ) {
-				vo.setPersentX(downFullX - vo.getPersentWidth());
+				vo.setX((int) ((downFullX - mAreaPoint.persentWidth) * (mDrawPanel.orgImageWidth/100f)));
 			}
 			if(directionY != 0) {
-				vo.setPersentY(downFullY - vo.getPersentHeight());
+				vo.setY((int) ((downFullY - mAreaPoint.persentHeight) * (mDrawPanel.orgImageHeight/100f)));
+			}
+			
+			
+		}
+	}
+	public void mouseReleased() {
+		if(mDrawPanel.isPixel()) {
+			int saveArea = mDrawPanel.selectArea;
+			if(saveArea > 0 ) {
+				AreaVo vo = mDrawPanel.areaList.get(saveArea);
+				vo.setX((int)vo.getX());
+				vo.setY((int)vo.getY());
+				vo.setWidth((int)vo.getWidth());
+				vo.setHeight((int)vo.getHeight());
 			}
 		}
 	}

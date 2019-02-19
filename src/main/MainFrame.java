@@ -106,7 +106,6 @@ public class MainFrame extends JFrame{
 							
 							URL url;
 							url = new URL(input);
-							System.out.println(input);
 							mImagePanel.mDrawPanel.setImage(ImageIO.read(url));
 							mImagePanel.mDrawPanel.areaList.removeAll(mImagePanel.mDrawPanel.areaList);
 							
