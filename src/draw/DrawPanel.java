@@ -50,7 +50,7 @@ public class DrawPanel extends JPanel{
 	public double imageOrgHeight;
 	
 	public float zoom = 1.0f;
-	public float autoReSize = 15.0f;
+	public float autoReSize = 20.0f;
 	public double zoomPosition[];
 	public ScrollDate zoomScrollDate;
 	

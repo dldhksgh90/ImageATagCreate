@@ -97,12 +97,12 @@ public class MainFrame extends JFrame{
 					try {
 						String input = JOptionPane.showInputDialog("image URL");
 						if(input!=null) {
-							if(input.indexOf("http")==-1) {
+						/*	if(input.indexOf("http")==-1) {
 								while(input.charAt(0)=='/') {
 									input = input.substring(1,input.length());
 								}
 								input = "http://" + input;
-							}
+							}*/
 							
 							URL url;
 							url = new URL(input);

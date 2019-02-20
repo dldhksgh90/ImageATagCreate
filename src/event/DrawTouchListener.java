@@ -143,9 +143,9 @@ public class DrawTouchListener {
 			isCreatePressed = false;
 			if(mDrawPanel.zoomScrollDate==null && !mDrawPanel.isDraw) {
 				if(e.getWheelRotation()==-1) {
-					mDrawPanel.zoom += 0.1f;
+					mDrawPanel.zoom += 0.3f;
 				}else {
-					mDrawPanel.zoom -= 0.1f;
+					mDrawPanel.zoom -= 0.3f;
 				}
 				
 				if(mDrawPanel.zoom < 0.1f) {
